@@ -10,9 +10,8 @@ import co.uk.silvania.rpgcore.network.LevelPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public abstract class SkillLevelBase {
 	
@@ -37,6 +36,7 @@ public abstract class SkillLevelBase {
 		this.staticId = skillID;
 		addRequirements();
 		addIncompatibilities();
+		addDescription();
 	}
 	
 	public void addXP(float xpAdd, EntityPlayer player) {
@@ -251,18 +251,14 @@ public abstract class SkillLevelBase {
 	}
 	
 	public boolean isSkillCompatable(EntityPlayer player) {
-		System.out.println("Checking skill compatability.");
 		for (int i = 0; i < incompatibleSkills.size(); i++) {
 			String requiredSkillId = incompatibleSkills.get(i);
 			SkillLevelBase skill = (SkillLevelBase) SkillLevelBase.get(player, requiredSkillId);
 			EquippedSkills equippedSkills = (EquippedSkills) EquippedSkills.get(player);
-			System.out.println("Checking to see if " + skill.skillName() + " (" + skill.skillId + ") is equipped.");
 			if (equippedSkills.isSkillEquipped(requiredSkillId)) {
-				System.out.println("IT IS! :O");
 				return false;
 			}
 		}
-		System.out.println("No issues found!");
 		return true;
 	}
 	
@@ -385,6 +381,12 @@ public abstract class SkillLevelBase {
      * @return the ResourceLocation of your icons
      */
 	public abstract ResourceLocation skillIcon();
+	
+	/**
+	 *  What happens when you activate the skill? Define it here! Providing player and world currently, may provide others if needed.
+	 *  You can also call this yourself if you want to, else it's handled by the skill activation system (not yet made).
+	 */
+	public abstract void activateSkill(EntityPlayer player, World world);
 	
 	/**
      * @return the X position of the top-left of your 30x30 icon

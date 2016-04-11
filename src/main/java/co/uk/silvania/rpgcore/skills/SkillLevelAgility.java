@@ -91,4 +91,10 @@ public class SkillLevelAgility extends SkillLevelBase implements IExtendedEntity
 	public int iconZ() {
 		return 0;
 	}
+
+	@Override
+	public void activateSkill(EntityPlayer player, World world) {
+		// TODO Auto-generated method stub
+		
+	}
 }

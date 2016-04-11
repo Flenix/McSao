@@ -100,4 +100,10 @@ public class SkillLevelHealth extends SkillLevelBase implements IExtendedEntityP
 	public int unlockedLevel() {
 		return 3;
 	}
+
+	@Override
+	public void activateSkill(EntityPlayer player, World world) {
+		// TODO Auto-generated method stub
+		
+	}
 }

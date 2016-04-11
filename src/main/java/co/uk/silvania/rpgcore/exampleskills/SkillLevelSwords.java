@@ -84,4 +84,10 @@ public class SkillLevelSwords extends SkillLevelBase implements IExtendedEntityP
 	public int iconZ() {
 		return 0;
 	}
+
+	@Override
+	public void activateSkill(EntityPlayer player, World world) {
+		// TODO Auto-generated method stub
+		
+	}
 }

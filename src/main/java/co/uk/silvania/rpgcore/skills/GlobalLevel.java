@@ -131,5 +131,11 @@ public class GlobalLevel extends SkillLevelBase implements IExtendedEntityProper
 	@Override
 	public int iconZ() {
 		return 0;
+	}
+
+	@Override
+	public void activateSkill(EntityPlayer player, World world) {
+		// TODO Auto-generated method stub
+		
 	}	
 }
