@@ -186,7 +186,7 @@ public class SkillLevelJump extends SkillLevelBase implements IExtendedEntityPro
 		description.add(nameFormat() + "\u00A7l" + skillName());
 		description.add("This is an example skill. Hooray!");
 		description.add("Jump up and down to gain XP.");
-		description.add("What can you do with that XP? \u00A7lNOTHING!");
+		description.add("What can you do with that XP?" + "\u00A7lNOTHING!");
 	}
 
 	//Higher values mean it takes longer to level up.
@@ -212,7 +212,7 @@ public class SkillLevelJump extends SkillLevelBase implements IExtendedEntityPro
 
 	@Override
 	public int iconX() {
-		return 0;
+		return 150;
 	}
 
 	@Override
@@ -225,5 +225,11 @@ public class SkillLevelJump extends SkillLevelBase implements IExtendedEntityPro
 	@Override
 	public boolean canGainXP() {
 		return true;
+	}
+
+	@Override
+	public void activateSkill(EntityPlayer player, World world) {
+		// TODO Auto-generated method stub
+		
 	}
 }

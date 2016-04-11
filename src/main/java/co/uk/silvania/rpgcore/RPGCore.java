@@ -1,5 +1,7 @@
 package co.uk.silvania.rpgcore;
 
+import co.uk.silvania.rpgcore.exampleskills.SkillLevelJump;
+import co.uk.silvania.rpgcore.exampleskills.SkillLevelPunch;
 import co.uk.silvania.rpgcore.exampleskills.SkillLevelSwords;
 import co.uk.silvania.rpgcore.network.CommandRPGCore;
 import co.uk.silvania.rpgcore.network.EquipNewSkillPacket;
@@ -9,7 +11,6 @@ import co.uk.silvania.rpgcore.network.OpenGuiPacket;
 import co.uk.silvania.rpgcore.skills.EquippedSkills;
 import co.uk.silvania.rpgcore.skills.GlobalLevel;
 import co.uk.silvania.rpgcore.skills.SkillLevelAgility;
-import co.uk.silvania.rpgcore.skills.SkillLevelBase;
 import co.uk.silvania.rpgcore.skills.SkillLevelHealth;
 import co.uk.silvania.rpgcore.skills.SkillLevelStrength;
 import net.minecraft.command.ICommandManager;
@@ -31,7 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class RPGCore {
 	
     public static final String MODID = "rpgcore";
-    public static final String VERSION = "0.2.0";
+    public static final String VERSION = "0.3.0";
     
     @Instance(RPGCore.MODID)
     public static RPGCore instance;
@@ -64,6 +65,8 @@ public class RPGCore {
     	SkillLevelSwords skillSwords = new SkillLevelSwords(null, "skillSwords");
     	SkillLevelStrength skillStrength = new SkillLevelStrength(null, "skillStrength");
     	SkillLevelHealth skillHealth = new SkillLevelHealth(null, "skillHealth");
+    	SkillLevelJump skillJump = new SkillLevelJump(null, "skillJump");
+    	SkillLevelPunch skillPunch = new SkillLevelPunch(null, "skillPunch");
     	
     	//Global level is NOT registered as it's not a normal skill, and shouldn't appear in lists etc.
     	//This only works because it's within the mod. Registration is required for external skills.
@@ -73,20 +76,25 @@ public class RPGCore {
     	RegisterSkill.register(skillSwords);
     	RegisterSkill.register(skillStrength);
     	RegisterSkill.register(skillHealth);
+    	RegisterSkill.register(skillPunch);
+    	RegisterSkill.register(skillJump);
     	
     	network.registerMessage(LevelPacket.Handler.class, LevelPacket.class, 0, Side.CLIENT);
     	network.registerMessage(OpenGuiPacket.Handler.class, OpenGuiPacket.class, 1, Side.SERVER);
     	network.registerMessage(EquippedSkillsPacket.Handler.class, EquippedSkillsPacket.class, 2, Side.CLIENT);
     	network.registerMessage(EquipNewSkillPacket.Handler.class, EquipNewSkillPacket.class, 3, Side.SERVER);
     	
+    	//Don't name your event handler "EventHandler" said Forge...
     	MinecraftForge.EVENT_BUS.register(new HandlerOfEvents());
-    	//MinecraftForge.EVENT_BUS.register(new SkillLevelBase());
+    	
     	MinecraftForge.EVENT_BUS.register(new EquippedSkills());
     	MinecraftForge.EVENT_BUS.register(new GlobalLevel(null, "globalLevel"));
     	MinecraftForge.EVENT_BUS.register(new SkillLevelAgility(null, "skillAgility"));
     	MinecraftForge.EVENT_BUS.register(new SkillLevelSwords(null, "skillSwords"));
     	MinecraftForge.EVENT_BUS.register(new SkillLevelStrength(null, "skillStrength"));
     	MinecraftForge.EVENT_BUS.register(new SkillLevelHealth(null, "skillHealth"));
+    	MinecraftForge.EVENT_BUS.register(new SkillLevelJump(null, "skillJump"));
+    	MinecraftForge.EVENT_BUS.register(new SkillLevelPunch(null, "skillPunch"));
     }
     
     @EventHandler
