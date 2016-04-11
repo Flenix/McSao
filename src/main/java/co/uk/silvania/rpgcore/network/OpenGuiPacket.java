@@ -3,7 +3,9 @@ package co.uk.silvania.rpgcore.network;
 import co.uk.silvania.rpgcore.RPGCore;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -32,11 +34,18 @@ public class OpenGuiPacket implements IMessage {
 	public static class Handler implements IMessageHandler<OpenGuiPacket, IMessage> {
 
 		@Override
-		public IMessage onMessage(OpenGuiPacket message, MessageContext ctx) {
-			EntityPlayer player = ctx.getServerHandler().playerEntity;
-			World world = player.worldObj;
-			System.out.println("Packet get! ID: " + message.guiId);
-			player.openGui(RPGCore.instance, message.guiId, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+		public IMessage onMessage(final OpenGuiPacket message, final MessageContext ctx) {
+			IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj;
+			
+			mainThread.addScheduledTask(new Runnable() {
+				@Override
+				public void run() {
+					EntityPlayer player = ctx.getServerHandler().playerEntity;
+					World world = player.worldObj;
+					System.out.println("Packet get! ID: " + message.guiId);
+					player.openGui(RPGCore.instance, message.guiId, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+				}
+			});
 			return null;
 		}
 	}

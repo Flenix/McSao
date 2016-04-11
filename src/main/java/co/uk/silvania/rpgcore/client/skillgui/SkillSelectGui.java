@@ -94,7 +94,6 @@ public class SkillSelectGui extends GuiContainer {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseZ, float partialTick) {
-		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseZ, partialTick);
 		
 		int skillSlot = getSkillSlotHover(mouseX, mouseZ);

@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -37,20 +38,28 @@ public class LevelPacket implements IMessage {
 	
 	public static class Handler implements IMessageHandler<LevelPacket, IMessage> {
 		
-		Minecraft mc = Minecraft.getMinecraft();
-
 		@Override
-		public IMessage onMessage(LevelPacket message, MessageContext ctx) {
-			EntityPlayerSP player = mc.thePlayer;
-			
-			if (message.skillId.equalsIgnoreCase(GlobalLevel.staticSkillId)) {
-				System.out.println("####### GLOBAL LEVEL RECEIVED. XP: " +message.xp);
-				GlobalLevel glevel = (GlobalLevel) GlobalLevel.get((EntityPlayer) player);
-				glevel.setXP((message.xp)/10.0F);
-			} else {
-				SkillLevelBase level = (SkillLevelBase) SkillLevelBase.get((EntityPlayer) player, message.skillId);
-				System.out.println("PACKET RECEIVED! SKILLID: " + message.skillId + ", XP: " + message.xp);
-				level.setXP(message.xp);
+		public IMessage onMessage(final LevelPacket message, final MessageContext ctx) {
+			if (ctx.side.isClient()) {
+				final Minecraft mc = Minecraft.getMinecraft();
+				IThreadListener mainThread = mc;
+				
+				mainThread.addScheduledTask(new Runnable() {
+					@Override
+					public void run() {
+						EntityPlayerSP player = mc.thePlayer;
+						
+						if (message.skillId.equalsIgnoreCase(GlobalLevel.staticSkillId)) {
+							System.out.println("####### GLOBAL LEVEL RECEIVED. XP: " + message.xp);
+							GlobalLevel glevel = (GlobalLevel) GlobalLevel.get((EntityPlayer) player);
+							glevel.setXP((message.xp)/10.0F);
+						} else {
+							SkillLevelBase level = (SkillLevelBase) SkillLevelBase.get((EntityPlayer) player, message.skillId);
+							System.out.println("PACKET RECEIVED! SKILLID: " + message.skillId + ", XP: " + message.xp);
+							level.setXP(message.xp);
+						}
+					}
+				});
 			}
 			return null;
 		}
